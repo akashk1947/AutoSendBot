@@ -1,7 +1,6 @@
 # Telegram Multi-Bot Automation
 
 ## Prerequisites
-
 - Python 3.8+ installed
 - All required Python packages (see below)
 - API credentials in `api.py`
