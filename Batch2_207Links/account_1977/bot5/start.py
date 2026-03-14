@@ -5,11 +5,24 @@ import sys
 import os
 import sqlite3
 import shutil
+import logging
 account_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(account_dir))
 from telethon import TelegramClient, events
 from should_send_message import should_send_message
 from telethon.errors import FloodWaitError
+
+# Suppress noisy TypeNotFoundError warnings caused by unrecognized Telegram TL types
+# (e.g. MessageMediaGiveaway). Telethon already catches these internally; they are harmless.
+class _SuppressTypeNotFound(logging.Filter):
+    def filter(self, record):
+        if record.exc_info:
+            exc = record.exc_info[1]
+            if exc is not None and 'TypeNotFoundError' in type(exc).__name__:
+                return False
+        return True
+
+logging.getLogger('telethon').addFilter(_SuppressTypeNotFound())
 from common.common_functions import load_target_groups, next_format, contains_keyword, send_message_safe, file_exists
 parent = os.path.normpath(os.path.join(os.path.abspath(__file__), ".."))
 groups_path = os.path.join(os.path.dirname(parent), "groups.txt")
@@ -117,6 +130,20 @@ async def main():
     for idx, link in enumerate(TARGET_GROUPS, 1):
         print(f"{idx}. {link}")
     print("Started Sending_ _ _ ________________________________")
-    await client.run_until_disconnected()
+    while True:
+        try:
+            await client.run_until_disconnected()
+        except KeyboardInterrupt:
+            break
+        except Exception as e:
+            print(f"[WARNING] Disconnected: {e} — reconnecting in 10s...")
+            await asyncio.sleep(10)
+            try:
+                await start_client_with_lock_recovery()
+            except Exception as re:
+                print(f"[ERROR] Reconnect failed: {re} — retrying in 30s...")
+                await asyncio.sleep(30)
+        else:
+            break  # clean disconnect
 
 asyncio.run(main())
