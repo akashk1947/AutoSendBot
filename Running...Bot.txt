@@ -1,9 +1,9 @@
-...4254 -  +919740534254 _Ban_Mar13
-...4139 -  +919668194139 _Ban_Mar13
+...4254 -  +919...4254 _Ban_Mar13
+...4139 -  +919...4139 _Ban_Mar13
+Batch2_207Links...1513_Ban
 Batch1_147Links...7741_Ban
 Batch1_147Links...7742
-Batch2_207Links...1513
-
+Batch2_207Links\account_1977
 
 C:\Users\theak\OneDrive\Desktop\Bot_autoSend\Bot_Batch2\account_4254
 
