@@ -5,6 +5,8 @@ Batch1_147Links...7741_Ban
 Batch1_147Links...7742
 Batch2_207Links\account_1977
 
-C:\Users\theak\OneDrive\Desktop\Bot_autoSend\Bot_Batch2\account_4254
+Dell: C:\Users\theak\OneDrive\Desktop\Bot_autoSend\Bot_Batch2\account_4254
+
+HP: C:\Users\Ananth Shetty\CodeBase\AutoSendBot
 
 ssh root@139.59.80.59
