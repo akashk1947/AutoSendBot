@@ -1,0 +1,10 @@
+...4254 -  +919740534254 _Ban_Mar13
+...4139 -  +919668194139 _Ban_Mar13
+Batch1_147Links...7741_Ban
+Batch1_147Links...7742
+Batch2_207Links...1513
+
+
+C:\Users\theak\OneDrive\Desktop\Bot_autoSend\Bot_Batch2\account_4254
+
+ssh root@139.59.80.59
