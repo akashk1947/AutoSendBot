@@ -2,7 +2,8 @@
 ...4139 -  +919...4139 _Ban_Mar13
 Batch2_207Links...1513_Ban
 Batch1_147Links...7741_Ban
-Batch1_147Links...7742
+
+Batch1_147Links...7742(1,2,3)
 Batch2_207Links\account_1977
 
 Dell: C:\Users\theak\OneDrive\Desktop\Bot_autoSend\Bot_Batch2\account_4254
