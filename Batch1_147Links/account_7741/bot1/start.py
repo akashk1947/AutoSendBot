@@ -34,16 +34,6 @@ active_groups = set()
 client = TelegramClient(session_name, api_id, api_hash)
 async def send_message_safe(chat_id, chat_title, group_link):
     try:
-        last_msg = await client.get_messages(chat_id, limit=1)
-        if last_msg and last_msg[0].out:
-            last_sent_time = last_msg[0].date.timestamp()
-            now = time.time()
-            wait_time = max(0, 30 - (now - last_sent_time))
-            if wait_time > 0:
-                print(f"Waiting {int(wait_time)}s before sending again in {group_link}")
-                await asyncio.sleep(wait_time)
-            print(f"⏭ Skipped (already last): {group_link}")
-            return
         msg = next_format(chat_id, last_format_index, FORMATS)
         await client.send_message(chat_id, msg)
         print(f"[OK] Sent in: {group_link}")
@@ -74,13 +64,6 @@ async def handler(event):
     if not should_send_message(text, length, has_keyword):
         return
     gid = event.chat_id
-    if gid in active_groups:
-        print(f"[INFO] Already queued: {group_link}")
-        return
-    last_msg = await client.get_messages(gid, limit=1)
-    if last_msg and last_msg[0].out:
-        print(f"[INFO] Skipped (our last msg): {chat.title}")
-        return
     active_groups.add(gid)
     asyncio.create_task(
         send_message_safe(gid, chat.title, group_link)

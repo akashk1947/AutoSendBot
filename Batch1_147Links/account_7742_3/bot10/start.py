@@ -57,10 +57,7 @@ async def start_client_with_lock_recovery():
 
 async def send_message_safe(chat_id, chat_title, group_link):
     try:
-        last_msg = await client.get_messages(chat_id, limit=1)
-        if last_msg and last_msg[0].out:
-            print(f"⏭ Skipped (already last): {group_link}")
-            return
+        # ...existing code...
         msg = next_format(chat_id, last_format_index, FORMATS)
         await client.send_message(chat_id, msg)
         print(f"[OK] Sent in: {group_link}")
@@ -92,13 +89,7 @@ async def handler(event):
     if not should_send_message(text, length, has_keyword):
         return
     gid = event.chat_id
-    if gid in active_groups:
-        print(f"[INFO] Already queued: {group_link}")
-        return
-    last_msg = await client.get_messages(gid, limit=1)
-    if last_msg and last_msg[0].out:
-        print(f"[INFO] Skipped (our last msg): {chat.title}")
-        return
+    # ...existing code...
     active_groups.add(gid)
     asyncio.create_task(
         send_message_safe(gid, chat.title, group_link)
