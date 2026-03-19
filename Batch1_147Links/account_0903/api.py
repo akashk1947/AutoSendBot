@@ -1,4 +1,4 @@
-Mobile = "+919512348903"
+Mobile = "
 
 _api_id = 32705058
 _api_hash = "a6e9c302b8274052dc8aa2d6b142a084"
