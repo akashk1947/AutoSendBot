@@ -17,40 +17,40 @@ contains_keyword = common_functions.contains_keyword
 accounts = {
     # 'Batch1_147Links/account_7741': [f'bot{i}' for i in range(1, 2)],
     # 'Batch1_147Links/account_4139': [f'bot{i}' for i in range(1, 2)],
-    'Batch2_207Links/account_1518': [f'bot{i}' for i in range(1, 2)],
-    # 'Batch2_207Links/account_8237': [f'bot{i}' for i in range(1, 2)],
-    'Batch2_207Links/account_1977': [f'bot{i}' for i in range(1, 2)],
+    # 'Batch2_207Links/account_1518': [f'bot{i}' for i in range(1, 2)],
+    # 'Batch2_207Links/account_1977': [f'bot{i}' for i in range(1, 2)],
+    # 'Batch2_207Links/account_4254': [f'bot{i}' for i in range(1, 2)],
+    # 'Batch2_207Links/account_49952': [f'bot{i}' for i in range(1, 2)], #will run next
+    'Batch2_207Links/account_64944': [f'bot{i}' for i in range(1, 2)],
 }
 
 GROUPS = [
     "https://t.me/ForceCertified",
     "https://t.me/SalesforceUSA",
     "https://t.me/Salesforcea",
+    # Groups are added dynamically from clients, this is just a placeholder list. The actual groups will be fetched from the clients' dialogs.
 ]
 
-FORMAT_1 = """+91 91338_17162 whatsapp only
+FORMAT_1 = """
+\/\/#atp ➕9️⃣1️⃣ 9️⃣1️⃣3️⃣3️⃣ 8️⃣1️⃣ 7️⃣1️⃣6️⃣2️⃣
+──────────────────────
+𝗢𝗡𝗘  𝗣 𝗔 𝗬  𝗨𝗡𝗟𝗜𝗠𝗜𝗧𝗘𝗗
+⚡️ 𝗜 𝗡 𝗧 𝗘 𝗩 𝗜 𝗘 𝗪  𝗦 𝗨 𝗣 𝗣 𝗢  𝗧
 
-📢 Interview support
-         Apttitude round support
-             Online Test/Exam support 
+𝗪𝗲 𝗖𝗼𝘃𝗲𝗿 𝗔𝗹𝗹 𝘁𝗲𝗰𝗵𝗻𝗼𝗹𝗼𝗴𝗶𝗲𝘀 𝗲𝘅𝗮𝗺𝗽𝗹𝗲:
+Java | Python | Node.js | React.js | Angular .NET | Salesforce | DevOps | AWS | Azure GCP | Data Science | ML | AI | BA | Manual Testing Automation (Selenium, Cypress) ,SAP | ServiceNow SQL | Oracle | Power BI | Tableau and all technologies
 
-We Cover All technologies example:
-    Java | Python | Node.js | React.js | Angular .NET | Salesforce | DevOps | AWS | Azure GCP | Data Science | ML | AI | BA | Manual Testing Automation (Selenium, Cypress) ,SAP | ServiceNow SQL | Oracle | Power BI | Tableau n all
+𝗣  𝟬 𝘅 𝘆  𝘄𝗶𝘁𝗵 𝗮𝗱𝘃𝗮𝗻𝗰𝗲 𝘄𝗵𝗶𝗰𝗵  𝗴𝗼𝗻𝗻𝗮 𝗯𝗲 :
+👉 𝟭𝟬𝟬  ℅ 𝗶 𝗻 𝘃 𝗶 𝘀 𝗶 𝗯 𝗹 𝗲 on screen share
+👉 𝟭𝟬𝟬 ℅ 𝗶 𝗻 𝘃 𝗶 𝘀 𝗶 𝗯 𝗹 𝗲 in task Manager
+👉 𝟭𝟬𝟬  % 𝗼𝗻 𝘀 𝗽 𝗼 𝘁 𝗮𝗻𝘀𝘄𝗲𝗿𝘀
+👉 𝟭𝟬𝟬 ℅ 𝘀 𝗮 𝗳 𝗲 and secured
 
-🎤 Proxy with advance software
-Which gonna be invisible 
-🔹 100℅ invisible on screen share
-🔹 100℅ invisible in task Manager
-🔹 100% on spot answers
-🔹 100℅ safe and secured 
+𝘀 𝘂 𝗽 𝗽 𝗼 𝘁 𝗲 𝗱 🇺🇸 🇬🇧 🇮🇳 🇨🇦 🇦🇺, All
+──────────────────────
+\/\/#atp ➕9️⃣1️⃣ 9️⃣1️⃣3️⃣3️⃣ 8️⃣1️⃣ 7️⃣1️⃣6️⃣2️⃣"""
 
-🌍 supported 🇺🇸 🇬🇧 🇮🇳 🇨🇦 🇦🇺 & All
-
-+91 91338_17162 whatsapp only"""
-
-FORMAT_2 = """🚩interview support-‼️
-
-We are providing  interview support  for below technologies
+FORMAT_2 = """🚩 𝗜 𝗡 𝗧 𝗘 𝗩 𝗜 𝗘 𝗪  𝗦 𝗨 𝗣 𝗣 𝗢  𝗧 ‼️
 
 * Python (Full Stack, Front end, Backend)
 * Java ( Fullstack, Front end, Backend,)
@@ -65,20 +65,20 @@ We are providing  interview support  for below technologies
 📍ETL Testing, QA manual, QA Automation
 📍And All Tech Stach we cover
 
-and all IT certification and online Test Support.
 
 For INDIA,USA,UK,Canada,Australia
 *(IST/CST/PST/EST time zones)*
-WhatsApp Only : +91 98850_74380"""
 
-FORMAT_3 = """Hi everyone 👋 We providing 
+\/\/#atp ➕9️⃣1️⃣ 9️⃣8️⃣8️⃣ 5️⃣0️⃣ 7️⃣4️⃣ 3️⃣8️⃣0️⃣"""
 
-Interview support available for all technologies 
+FORMAT_3 = """Hi everyone 👋 
+
+I n t e v i e w  s u p p o t  a v a i l a b l e for all technologies 
 
 For:
 👉 Salesforce 
 👉Java
-👉Java full stack  
+👉Java full stack  
 👉 C , C ++
 👉Spring Boot Microservices 
 👉spring Hibernate 
@@ -105,36 +105,16 @@ For:
 👉Mango DB
 👉Oracle 
 
-Online test support & Exam support also available 
+O n l n e  t e s t   s u p p o t  &  E x a m s u p p o t also available 
 
-WhatsApp me for more details....
-+91 91338_17162"""
-
-FORMAT_4 = """_._._._._._._._._._._._
-Interview Support 
-°°°°°°°°°°°°°°°°°°°°
-
-📍Data Science📍Data Analyst📍BA📍ETL📍Devops 📍Salesforce 📍Java📍Python 📍Power bi📍 React Angular📍QA📍Azure 📍Dot Net📍PL/SQL📍Networking 📍SAP📍Service Now📍AI/ML and many more
-
-By using advance tool which is
-🔹 100℅ invisible in task Manager
-🔹 100℅ invisible on screen share
-🔹 100℅ guaranteed support
-🔹 100℅ on spot answers
-🔹 100℅ safe and secured 
-
-For INDIA,USA,UK,Canada,Australia
-*(IST/CST/PST/EST time zones)
-
-Whatsapp: +91 91338_17162"""
+\/\/#atp  ➕9️⃣1️⃣ 9️⃣1️⃣3️⃣3️⃣ 8️⃣1️⃣ 7️⃣1️⃣6️⃣2️⃣"""
 
 
 # (FORMAT_1, FORMAT_2, etc. remain the same as your input)
 FORMATS = [
     FORMAT_1,
     FORMAT_2,
-    FORMAT_3,
-    FORMAT_4,
+    FORMAT_3
 ]
 
 # --- HELPERS ---
@@ -203,6 +183,7 @@ async def main():
     last_format_index = {}
     last_account_index = {}
     active_groups = set()
+    all_our_user_ids = set()
 
     # 1. Initialize Clients
     print('[INFO] Starting clients...')
@@ -217,6 +198,12 @@ async def main():
                 session_path = os.path.join(account, bot, api_mod.sessionName())
                 client = TelegramClient(session_path, api_id, api_hash)
                 await client.start()
+                # Get our user id for this client
+                try:
+                    me = await client.get_me()
+                    all_our_user_ids.add(me.id)
+                except Exception as e:
+                    print(f"[WARN] Could not get user id for {account}/{bot}: {e}")
                 clients.append({
                     'client': client,
                     'account': account,
@@ -239,8 +226,9 @@ async def main():
         GROUPS.extend(list(joined_groups))
         print(f'[INFO] Found {len(GROUPS)} groups.')
 
-    # 3. Define the Periodic Sending Loop
-    async def run_periodic_send():
+
+    # 3. Define the Strict 10-Minute Periodic Sending Loop
+    async def run_strict_10min_send():
         while True:
             print("[INFO] Starting scheduled round...")
             for group_link in GROUPS:
@@ -248,12 +236,13 @@ async def main():
                 idx_fmt = last_format_index.get(group_link, 0)
 
                 selected = clients[idx_acc % len(clients)]
-                
+
                 try:
                     entity = await selected['client'].get_entity(group_link)
                     last_msg = await selected['client'].get_messages(entity, limit=1)
-                    if last_msg and last_msg[0].out:
-                        print(f"[SKIP], (last msg is our msg) {group_link}")
+                    # Check if last message was sent by any of our accounts
+                    if last_msg and last_msg[0].sender_id in all_our_user_ids:
+                        print(f"[SKIP], (last msg is from any of our accounts) {group_link}")
                     else:
                         # Logic to send if last msg wasn't ours
                         await send_message_with_client(
@@ -268,39 +257,11 @@ async def main():
                 last_account_index[group_link] = (idx_acc + 1) % len(clients)
                 await asyncio.sleep(1) # Small delay between groups
 
-            print("[INFO] Round completed. Sleeping for 1 hour...")
-            await asyncio.sleep(3600)
+            print("[INFO] Round completed. Waiting 10 minutes before next round...")
+            await asyncio.sleep(600)  # Wait exactly 10 minutes
 
-    # 4. Set up Event Handlers
-    for entry in clients:
-        @entry['client'].on(events.NewMessage)
-        async def handler(event, current_entry=entry):
-            if event.out or not event.is_group or not event.raw_text:
-                return
-            
-            chat = await event.get_chat()
-            username = getattr(chat, "username", None)
-            if not username:
-                return
-                
-            group_link = f"https://t.me/{username}"
-            text = event.raw_text.strip()
-            
-            if len(text) >= 250 or contains_keyword(text, current_entry['keywords']):
-                idx_fmt = last_format_index.get(group_link, 0)
-                await send_message_with_client(
-                    current_entry['client'],
-                    group_link,
-                    FORMATS[idx_fmt % len(FORMATS)],
-                    current_entry['account'],
-                    current_entry['bot'],
-                    FORMATS,
-                    last_format_index,
-                    active_groups
-                )
-
-    # Run both the periodic loop and the event listening
-    await asyncio.gather(run_periodic_send(), *[c['client'].run_until_disconnected() for c in clients])
+    # Only run the strict timer-based loop and keep clients alive
+    await asyncio.gather(run_strict_10min_send(), *[c['client'].run_until_disconnected() for c in clients])
 
 if __name__ == '__main__':
     asyncio.run(main())
