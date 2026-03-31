@@ -130,6 +130,7 @@ async def send_messages(client, group_links, formats, interval=600):
             # print(f"[INFO] Waiting {gap} seconds before next message...")
             await asyncio.sleep(gap)  # Random delay between 1 and 5 seconds
         import random
+        wait_time = random.randint(300, 600) # Random delay between 1 and 5 minutes before next round
         wait_time = random.randint(300, 600) # Random delay between 5 and 10 minutes before next round
         print(f"[INFO] Waiting {wait_time} seconds before next round...\n")
         round_num += 1
