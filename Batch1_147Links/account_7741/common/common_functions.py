@@ -35,15 +35,16 @@ def load_target_groups(groups_path, fromItem=0, toItem=3):
         print(f"[WARNING] groups.txt not found at {groups_path}")
         return []
 
+def contains_keyword(text, KEYWORDS):
+    t = text.lower()
+    return any(k.lower() in t for k in KEYWORDS)
+
+
 def next_format(chat_id, last_format_index, FORMATS):
     i = last_format_index.get(chat_id, -1)
     i = (i + 1) % len(FORMATS)
     last_format_index[chat_id] = i
     return FORMATS[i]
-
-def contains_keyword(text, KEYWORDS):
-    t = text.lower()
-    return any(k.lower() in t for k in KEYWORDS)
 
 async def send_message_safe(client, chat_id, chat_title, group_link, FORMATS, last_format_index, active_groups):
     try:

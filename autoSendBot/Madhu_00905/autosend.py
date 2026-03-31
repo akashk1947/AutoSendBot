@@ -1,11 +1,52 @@
+
 import asyncio
 from telethon import TelegramClient, errors
 import os
+from pathlib import Path
 
-# --- USER INPUT ---
-phone = input('Enter your phone number (with country code): ')
-api_id = int(input('Enter your API ID: '))
-api_hash = input('Enter your API Hash: ')
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    import subprocess
+    subprocess.check_call(['pip', 'install', 'python-dotenv'])
+    from dotenv import load_dotenv
+
+
+env_path = Path(__file__).parent / '.env'
+def prompt_and_save_env(phone, api_id, api_hash):
+    with open(env_path, 'w') as f:
+        f.write(f"PHONE={phone}\nAPI_ID={api_id}\nAPI_HASH={api_hash}\n")
+
+def get_env_value(var, prompt_text):
+    val = os.getenv(var)
+    if not val:
+        val = input(prompt_text)
+    return val
+
+if env_path.exists():
+    load_dotenv(dotenv_path=env_path)
+    phone = os.getenv('PHONE')
+    api_id = os.getenv('API_ID')
+    api_hash = os.getenv('API_HASH')
+    missing = False
+    if not phone:
+        phone = input('Enter your phone number (with country code): ')
+        missing = True
+    if not api_id:
+        api_id = input('Enter your API ID: ')
+        missing = True
+    if not api_hash:
+        api_hash = input('Enter your API Hash: ')
+        missing = True
+    if missing:
+        prompt_and_save_env(phone, api_id, api_hash)
+    api_id = int(api_id)
+else:
+    phone = input('Enter your phone number (with country code): ')
+    api_id = input('Enter your API ID: ')
+    api_hash = input('Enter your API Hash: ')
+    prompt_and_save_env(phone, api_id, api_hash)
+    api_id = int(api_id)
 session_name = 'user_session'
 
 
@@ -45,9 +86,11 @@ async def fetch_and_print_groups(client):
     return links
 
 
+
 async def send_messages(client, group_links, formats, interval=600):
     last_format = -1
     round_num = 1
+    skip_numbers = ["9133817162", "9885074380", "7093493173", "919133817162", "919885074380", "917093493173"]  # Add more numbers to skip if needed 
     while True:
         results = []
         for idx, group in enumerate(group_links, 1):
@@ -55,8 +98,25 @@ async def send_messages(client, group_links, formats, interval=600):
             if group == 'https://t.me/SavedMessages' or group.lower() == 'me':
                 continue
             last_format = (last_format + 1) % len(formats)
+            message_to_send = formats[last_format]
+            # Fetch last message in the group
+            last_msg = None
             try:
-                await client.send_message(group, formats[last_format])
+                async for msg in client.iter_messages(group, limit=1):
+                    last_msg = msg.text.strip() if msg.text else None
+                    break
+            except Exception as e:
+                print(f"{idx}. {group}: ERROR fetching last message: {e}")
+                continue
+            # Skip if last message contains any of the skip_numbers
+            if last_msg and any(num in last_msg for num in skip_numbers):
+                print(f"{idx}. SKIPPED {group}:")
+                continue
+            if last_msg and last_msg == message_to_send:
+                print(f"{idx}. SKIPPED {group}:")
+                continue
+            try:
+                await client.send_message(group, message_to_send)
                 status = "_/"
             except errors.FloodWaitError as e:
                 status = "X"
@@ -64,10 +124,13 @@ async def send_messages(client, group_links, formats, interval=600):
             except Exception as e:
                 status = "X"
             results.append((group, status))
-            print(f"{idx}. {group}: {status}")
-            await asyncio.sleep(2)  # Short delay between groups
+            print(f"{idx}. {status}       {group}")
+            import random
+            gap = random.randint(1, 5)
+            # print(f"[INFO] Waiting {gap} seconds before next message...")
+            await asyncio.sleep(gap)  # Random delay between 1 and 5 seconds
         import random
-        wait_time = random.randint(300, 600)
+        wait_time = random.randint(0, 60) # Random delay between 0 and 60 seconds before next round
         print(f"[INFO] Waiting {wait_time} seconds before next round...\n")
         round_num += 1
         await asyncio.sleep(wait_time)

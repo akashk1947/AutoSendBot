@@ -1,5 +1,4 @@
 Mobile = "+919826783370"
-
 _api_id = 39498263
 _api_hash = "7aab4776d6974f8680b14da7890e7571"
 _session_name = "auto_send_session"

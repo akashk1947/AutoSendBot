@@ -86,23 +86,11 @@ async def fetch_and_print_groups(client):
     return links
 
 
-KEYWORDS = [
-    "proxy support",
-    "interview support",
-    "interview",
-    "interview help",
-    "support available",
-    "proxy",
-    "assessment",
-    "exam",
-    "test",
-    "8106368645",
-]
 
 async def send_messages(client, group_links, formats, interval=600):
     last_format = -1
     round_num = 1
-    skip_numbers = ["9133817162", "9885074380", "7093493173", "919133817162", "919885074380", "917093493173", "9133_81_7162", "98850_74380", "7093_49_3173"]  # Add more numbers to skip if needed 
+    skip_numbers = ["9133817162", "9885074380", "7093493173", "919133817162", "919885074380", "917093493173"]  # Add more numbers to skip if needed 
     while True:
         results = []
         for idx, group in enumerate(group_links, 1):
@@ -127,12 +115,6 @@ async def send_messages(client, group_links, formats, interval=600):
             if last_msg and last_msg == message_to_send:
                 print(f"{idx}. SKIPPED {group}:")
                 continue
-            if last_msg:
-                has_keyword = any(keyword in last_msg.lower() for keyword in KEYWORDS)
-                msg_length = len(last_msg)
-                if (has_keyword and msg_length <= 250) or (not has_keyword and msg_length <= 250):
-                    print(f"{idx}. SKIPPED {group}:")
-                    continue
             try:
                 await client.send_message(group, message_to_send)
                 status = "_/"
@@ -148,7 +130,7 @@ async def send_messages(client, group_links, formats, interval=600):
             # print(f"[INFO] Waiting {gap} seconds before next message...")
             await asyncio.sleep(gap)  # Random delay between 1 and 5 seconds
         import random
-        wait_time = random.randint(0, 60) # Random delay between 0 and 60 seconds before next round
+        wait_time = random.randint(0, 60) # Random delay between 5 and 10 minutes before next round
         print(f"[INFO] Waiting {wait_time} seconds before next round...\n")
         round_num += 1
         await asyncio.sleep(wait_time)
