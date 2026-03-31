@@ -90,7 +90,7 @@ async def fetch_and_print_groups(client):
 async def send_messages(client, group_links, formats, interval=600):
     last_format = -1
     round_num = 1
-    skip_numbers = ["9133817162", "9885074380", "7093493173"]
+    skip_numbers = ["9133817162", "9885074380", "7093493173", "919133817162", "919885074380", "917093493173"]  # Add more numbers to skip if needed 
     while True:
         results = []
         for idx, group in enumerate(group_links, 1):
