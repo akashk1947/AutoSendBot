@@ -90,7 +90,7 @@ async def fetch_and_print_groups(client):
 async def send_messages(client, group_links, formats, interval=600):
     last_format = -1
     round_num = 1
-    skip_numbers = ["919133817162", "919885074380", "917093493173"]
+    skip_numbers = ["9133817162", "9885074380", "7093493173"]
     while True:
         results = []
         for idx, group in enumerate(group_links, 1):
@@ -131,7 +131,7 @@ async def send_messages(client, group_links, formats, interval=600):
             await asyncio.sleep(gap)  # Random delay between 1 and 5 seconds
         import random
         wait_time = random.randint(300, 600)
-        # print(f"[INFO] Waiting {wait_time} seconds before next round...\n")
+        print(f"[INFO] Waiting {wait_time} seconds before next round...\n")
         round_num += 1
         await asyncio.sleep(wait_time)
 
