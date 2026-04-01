@@ -122,16 +122,16 @@ async def send_messages(client, group_links, formats, interval=600):
                 continue
             # Skip if last message contains any of the skip_numbers
             if last_msg and any(num in last_msg for num in skip_numbers):
-                print(f"{idx}. SKIPPED {group}:")
+                print(f"{idx}. SKIPPED  {group}")
                 continue
             if last_msg and last_msg == message_to_send:
-                print(f"{idx}. SKIPPED {group}:")
+                print(f"{idx}. SKIPPED  {group}")
                 continue
             if last_msg:
                 has_keyword = any(keyword in last_msg.lower() for keyword in KEYWORDS)
                 msg_length = len(last_msg)
                 if (has_keyword and msg_length <= 250) or (not has_keyword and msg_length <= 250):
-                    print(f"{idx}. SKIPPED {group}:")
+                    print(f"{idx}. SKIPPED  {group}")
                     continue
             try:
                 await client.send_message(group, message_to_send)
@@ -158,7 +158,14 @@ async def main():
     client = TelegramClient(session_name, api_id, api_hash)
     await client.start(phone=phone)
     groupLinks = await fetch_group_links(client)
-    if not groupLinks:
+    # Deduplicate group links while preserving order
+    seen = set()
+    unique_groupLinks = []
+    for link in groupLinks:
+        if link not in seen:
+            unique_groupLinks.append(link)
+            seen.add(link)
+    if not unique_groupLinks:
         print("[WARN] No groups found. Join some groups and try again.")
         return
     # Fetch formats from Saved Messages, fallback to default if none found
@@ -166,7 +173,7 @@ async def main():
     if not formats:
         print("[WARN] No formats found in Saved Messages. Please add some messages there.")
         return
-    await send_messages(client, groupLinks, formats)
+    await send_messages(client, unique_groupLinks, formats)
 
 if __name__ == '__main__':
     asyncio.run(main())

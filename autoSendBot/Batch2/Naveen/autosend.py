@@ -86,11 +86,23 @@ async def fetch_and_print_groups(client):
     return links
 
 
+KEYWORDS = [
+    "proxy support",
+    "interview support",
+    "interview",
+    "interview help",
+    "support available",
+    "proxy",
+    "assessment",
+    "exam",
+    "test",
+    "8106368645",
+]
 
 async def send_messages(client, group_links, formats, interval=600):
     last_format = -1
     round_num = 1
-    skip_numbers = ["9133817162", "9885074380", "7093493173", "919133817162", "919885074380", "917093493173"]  # Add more numbers to skip if needed 
+    skip_numbers = ["9133817162", "9885074380", "7093493173", "919133817162", "919885074380", "917093493173", "9133_81_7162", "98850_74380", "7093_49_3173"]  # Add more numbers to skip if needed 
     while True:
         results = []
         for idx, group in enumerate(group_links, 1):
@@ -110,11 +122,17 @@ async def send_messages(client, group_links, formats, interval=600):
                 continue
             # Skip if last message contains any of the skip_numbers
             if last_msg and any(num in last_msg for num in skip_numbers):
-                print(f"{idx}. SKIPPED {group}:")
+                print(f"{idx}. SKIPPED  {group}")
                 continue
             if last_msg and last_msg == message_to_send:
-                print(f"{idx}. SKIPPED {group}:")
+                print(f"{idx}. SKIPPED  {group}")
                 continue
+            if last_msg:
+                has_keyword = any(keyword in last_msg.lower() for keyword in KEYWORDS)
+                msg_length = len(last_msg)
+                if (has_keyword and msg_length <= 250) or (not has_keyword and msg_length <= 250):
+                    print(f"{idx}. SKIPPED  {group}")
+                    continue
             try:
                 await client.send_message(group, message_to_send)
                 status = "_/"
@@ -130,7 +148,7 @@ async def send_messages(client, group_links, formats, interval=600):
             # print(f"[INFO] Waiting {gap} seconds before next message...")
             await asyncio.sleep(gap)  # Random delay between 1 and 5 seconds
         import random
-        wait_time = random.randint(0, 60) # Random delay between 5 and 10 minutes before next round
+        wait_time = random.randint(0, 60) # Random delay between 0 and 60 seconds before next round
         print(f"[INFO] Waiting {wait_time} seconds before next round...\n")
         round_num += 1
         await asyncio.sleep(wait_time)
@@ -140,7 +158,14 @@ async def main():
     client = TelegramClient(session_name, api_id, api_hash)
     await client.start(phone=phone)
     groupLinks = await fetch_group_links(client)
-    if not groupLinks:
+    # Deduplicate group links while preserving order
+    seen = set()
+    unique_groupLinks = []
+    for link in groupLinks:
+        if link not in seen:
+            unique_groupLinks.append(link)
+            seen.add(link)
+    if not unique_groupLinks:
         print("[WARN] No groups found. Join some groups and try again.")
         return
     # Fetch formats from Saved Messages, fallback to default if none found
@@ -148,7 +173,7 @@ async def main():
     if not formats:
         print("[WARN] No formats found in Saved Messages. Please add some messages there.")
         return
-    await send_messages(client, groupLinks, formats)
+    await send_messages(client, unique_groupLinks, formats)
 
 if __name__ == '__main__':
     asyncio.run(main())
