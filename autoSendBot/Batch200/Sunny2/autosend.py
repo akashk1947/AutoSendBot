@@ -102,7 +102,7 @@ KEYWORDS = [
 async def send_messages(client, group_links, formats, interval=600):
     last_format = -1
     round_num = 1
-    skip_numbers = ["9133817162", "9885074380", "7093493173", "919133817162", "919885074380", "917093493173", "9133_81_7162", "988_50_74380", "7093_49_3173" ,"@invisibleproxysuppot", "@sunnysuppot", "566886990"]  # Add more numbers to skip if needed 
+    skip_numbers = ["9133817162", "9885074380", "7093493173", "919133817162", "919885074380", "917093493173", "9133_81_7162", "988_50_74380", "7093_49_3173" ,"@invisibleproxysuppot", "@sudhansupport", "@sunnysuppot"]  # Add more numbers to skip if needed 
     while True:
         results = []
         for idx, group in enumerate(group_links, 1):
@@ -130,7 +130,7 @@ async def send_messages(client, group_links, formats, interval=600):
             if last_msg and any(num in last_msg for num in skip_numbers):
                 print(f"{idx}. SKIPPED  {group}")
                 continue
-            if msg_length <= 250 and not has_keyword:
+            if msg_length <= 500 and not has_keyword:
                 print(f"{idx}. SKIPPED  {group}")
                 continue
             try:
