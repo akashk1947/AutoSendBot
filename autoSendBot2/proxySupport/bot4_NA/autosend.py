@@ -47,7 +47,7 @@ else:
     api_hash = input('Enter your API Hash: ')
     prompt_and_save_env(phone, api_id, api_hash)
     api_id = int(api_id)
-session_name = 'user_session'
+session_name = 'session'
 
 
 # --- FETCH FORMATS FROM SAVED MESSAGES ---
@@ -102,7 +102,7 @@ KEYWORDS = [
 async def send_messages(client, group_links, formats, interval=600):
     last_format = -1
     round_num = 1
-    skip_numbers = ["9133817162", "9885074380", "7093493173", "919133817162", "919885074380", "917093493173", "9133_81_7162", "98850_74380", "7093_49_3173"]  # Add more numbers to skip if needed 
+    skip_numbers = ["78148_37019", "𝗗𝗠_𝗧𝗢_𝗞𝗡𝗢𝗪_𝗠𝗢𝗥𝗘","8271737924","82_717379_24", "9133817162", "9885074380", "7093493173", "919133817162", "919885074380", "917093493173", "9133_81_7162", "98850_74380", "7093_49_3173"]  # Add more numbers to skip if needed 
     while True:
         results = []
         for idx, group in enumerate(group_links, 1):
@@ -147,11 +147,11 @@ async def send_messages(client, group_links, formats, interval=600):
             results.append((group, status))
             print(f"{idx}. {status}       {group}")
             import random
-            gap = random.randint(1, 5)
+            gap = random.randint(1, 5)  # Random gap after each message to mimic human behavior
             # print(f"[INFO] Waiting {gap} seconds before next message...")
             await asyncio.sleep(gap)  # Random delay between 1 and 5 seconds
         import random
-        wait_time = random.randint(0, 60) # Random delay between 0 and 60 seconds before next round
+        wait_time = random.randint(600, 900) # Random delay between 10 and 15 minutes before next round
         print(f"[INFO] Waiting {wait_time} seconds before next round...\n")
         round_num += 1
         await asyncio.sleep(wait_time)
