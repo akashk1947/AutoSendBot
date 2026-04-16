@@ -102,7 +102,7 @@ KEYWORDS = [
 async def send_messages(client, group_links, formats, interval=600):
     last_format = -1
     round_num = 1
-    skip_numbers = ["92441_45979", "𝗗𝗠_𝗧𝗢_𝗞𝗡𝗢𝗪_𝗠𝗢𝗥𝗘","8271737924","82_717379_24", "9133817162", "9885074380", "7093493173", "919133817162", "919885074380", "917093493173", "9133_81_7162", "98850_74380", "7093_49_3173"]  # Add more numbers to skip if needed 
+    skip_numbers = ["78148_37019", "𝗗𝗠_𝗧𝗢_𝗞𝗡𝗢𝗪_𝗠𝗢𝗥𝗘","8271737924","82_717379_24", "9133817162", "9885074380", "7093493173", "919133817162", "919885074380", "917093493173", "9133_81_7162", "98850_74380", "7093_49_3173"]  # Add more numbers to skip if needed 
     while True:
         results = []
         for idx, group in enumerate(group_links, 1):

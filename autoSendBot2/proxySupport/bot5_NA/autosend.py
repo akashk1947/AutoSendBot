@@ -88,7 +88,7 @@ async def send_messages(client, group_links, formats):
                     elif len(last_msg) <= 250 and not has_keyword: skip_reason = "Short/No Keyword"
 
                 if skip_reason:
-                    print(f"{idx}._______SKIP {group}")
+                    print(f"{idx}.__S_K_I_P__ {group}")
                 else:
                     await client.send_message(group, message_to_send)
                     print(f"{idx}.__________/ {group}")
@@ -97,7 +97,7 @@ async def send_messages(client, group_links, formats):
                 print(f"[!] FloodWait: Must sleep for {e.seconds}s")
                 await asyncio.sleep(e.seconds)
             except Exception as e:
-                print(f"{idx}._______XXXX {group}")
+                print(f"{idx}.__X_X_X_X__ {group}")
 
             # Always wait the calculated gap to keep the 1-hour rhythm
             await asyncio.sleep(gap)
