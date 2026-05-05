@@ -31,8 +31,8 @@ KEYWORDS = [
 
 ROOT_DIR = Path(__file__).parent
 MIN_BREAK = 5 * 60   # 1 minutes
-MAX_BREAK = 10 * 60  # 5 minutes
-ROUND_DELAY = 5 * 60 # 5 minutes between full rounds
+MAX_BREAK = 5 * 60  # 5 minutes
+ROUND_DELAY = 1 * 60 # 5 minutes between full rounds
 
 # --- HELPER FUNCTIONS ---
 
