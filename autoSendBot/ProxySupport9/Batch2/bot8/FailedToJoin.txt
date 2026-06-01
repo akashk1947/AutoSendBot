@@ -1,0 +1,3 @@
+1. https://t.me/IT_Job_Banglore | Error: No user has "it_job_banglore" as username
+2. https://t.me/placement_batch_2025 | Error: No user has "placement_batch_2025" as username
+3. https://t.me/usa_java_spring_job_support | Error: No user has "usa_java_spring_job_support" as username

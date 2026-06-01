@@ -1,3 +1,21 @@
+import asyncio
+import os
+import re
+import random
+import subprocess
+import sys
+from pathlib import Path
+
+from telethon import TelegramClient, errors
+
+# Attempt to import dotenv, install if missing
+try:
+    from dotenv import dotenv_values
+except ImportError:
+    subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'python-dotenv'])
+    from dotenv import dotenv_values
+
+# --- CONFIGURATION ---
 KEYWORDS = [
     "proxy support",
     "interview support",
@@ -11,256 +29,230 @@ KEYWORDS = [
     "8106368645",
 ]
 
-import asyncio
-import os
-import re
-from pathlib import Path
+# The array the script will now pull from randomly
+Formats = [
+    """━━━━━━━━━━━━━━━━━━━━━━━
+⚡️ INTERVIEW SUPPORT ⚡️ 
+━━━━━━━━━━━━━━━━━━━━━━━
 
-from telethon import TelegramClient, errors
+Struggling with interviews? Online tests? Aptitude rounds?
+We’ve got your back 💯
 
-try:
-    from dotenv import dotenv_values
-except ImportError:
-    import subprocess
-    subprocess.check_call(['pip', 'install', 'python-dotenv'])
-    from dotenv import dotenv_values
+🔥 OUR SERVICES:
+✔ Aptitude Round Support
+✔ Technical Interview Support
+✔ Online Test / Exam Support
+✔ Real-Time Job Support
+
+🚀 TECHNOLOGIES COVERED:
+Java | Python | Node.js | React.js | Angular
+.NET | Salesforce | DevOps
+AWS | Azure | GCP
+Data Science | ML | AI
+Business Analyst (BA)
+Manual & Automation Testing (Selenium, Cypress)
+SAP | ServiceNow | SQL | Oracle
+Power BI | Tableau & Many More
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+💎 WHY CHOOSE US?
+👉 100% Invisible Screen Sharing
+👉 Undetectable in Task Manager
+👉 Instant On-Spot Answers
+👉 100% Safe & Secure Support
+👉 Trusted Globally 🌍 (🇺🇸 🇬🇧 🇮🇳 🇨🇦 🇦🇺)
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+No_DMs
+📲Only_WhatsAp: 91 92441_45979""",
+
+"""🎯 Struggling with Interviews? Let Experts Handle It!
+
+🚀 Crack Any Tech Interview with Expert Proxy Support!
+✅ Guaranteed satisfaction
+✅ Master Any Skill — Java to DevOps
+✅ Safe, Secure & Instant Assistance
+
+No_DMs
+📲Only_WhatsAp: 91 92441_45979
+
+
+🛠️ Technologies We Cover:
+💻 Java (Fullstack / Backend)
+💻 Python | React | Node.js
+💻 Salesforce | ServiceNow | Workday | SAP
+💻 DevOps (AWS / Azure / GCP)
+💻 QA (Manual / Automation)
+💻 Data Engineer | BI | .NET | More…
+
+
+🌟 Why Choose Us?
+💡 Confidential Yet Powerfull software
+⚡ real-time coaching and guidance
+🛡️ 100% Safe & Secure — protect your system & data
+🏆 Experts Across Every Tech Domain — Java to Salesforce
+🚀 Guaranteed Success — confidence & performance boost
+🌍 Global Support — USA 🇺🇸 | UK 🇬🇧 | India 🇮🇳 | Canada 🇨🇦 | Australia 🇦🇺
+
+No_DMs
+📲Only_WhatsAp: 91 92441_45979"""
+]
 
 ROOT_DIR = Path(__file__).parent
+MIN_BREAK = 5 * 60   
+MAX_BREAK = 5 * 60  
+ROUND_DELAY = 1 * 60 
 
-
-def prompt_and_save_env(env_path, phone, api_id, api_hash):
-    env_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(env_path, 'w', encoding='utf-8') as f:
-        f.write(f"PHONE={phone}\nAPI_ID={api_id}\nAPI_HASH={api_hash}\n")
-
+# --- HELPER FUNCTIONS ---
 
 def load_bot_env(bot_dir):
     env_path = bot_dir / '.env'
     global_env_path = ROOT_DIR / '.env'
-    # Load phone from bot's .env
+    
     values = dotenv_values(env_path) if env_path.exists() else {}
     phone = values.get('PHONE') or os.getenv('PHONE')
-    # Load API_ID and API_HASH from global .env
+    
     global_values = dotenv_values(global_env_path) if global_env_path.exists() else {}
     api_id = global_values.get('API_ID') or os.getenv('API_ID')
     api_hash = global_values.get('API_HASH') or os.getenv('API_HASH')
 
-    missing = False
     if not phone:
-        phone = input(f"Enter phone number for {bot_dir.name} (with country code): ")
-        missing = True
+        phone = input(f"Enter phone number for {bot_dir.name}: ")
     if not api_id:
         api_id = input(f"Enter API ID (global): ")
-        missing = True
     if not api_hash:
         api_hash = input(f"Enter API Hash (global): ")
-        missing = True
-    if missing and env_path:
-        # Only save phone to bot's .env, API_ID and API_HASH to global .env
-        if not phone:
-            prompt_and_save_env(env_path, phone, '', '')
-        if (not api_id or not api_hash) and global_env_path:
-            with open(global_env_path, 'a', encoding='utf-8') as f:
-                if api_id:
-                    f.write(f"API_ID={api_id}\n")
-                if api_hash:
-                    f.write(f"API_HASH={api_hash}\n")
-
+        
     return phone, int(api_id), api_hash
-
 
 def get_bot_dirs(root_dir):
     bot_dirs = [p for p in root_dir.iterdir() if p.is_dir() and p.name.lower().startswith('bot')]
-
+    
     def sort_key(path):
         match = re.search(r'\d+', path.name)
         return int(match.group()) if match else path.name.lower()
 
     return sorted(bot_dirs, key=sort_key)
 
-
-def get_session_name(bot_dir):
-    session_base = bot_dir / 'session'
-    return str(session_base)
-
-
-# --- FETCH FORMATS FROM SAVED MESSAGES ---
-async def fetch_formats_from_saved_messages(client, num_formats=3):
-    entity = await client.get_entity('me')
-    messages = []
-    async for msg in client.iter_messages(entity, limit=num_formats):
-        if msg.text and msg.text.strip():
-            messages.append(msg.text.strip())
-    return list(reversed(messages))
-
-
-# --- GROUP LINKS: Will be dynamically fetched each bot run ---
 async def fetch_group_links(client):
-    print("[INFO] Fetching joined groups...")
     links = []
     async for dialog in client.iter_dialogs():
         if getattr(dialog.entity, 'megagroup', False) and dialog.is_group and getattr(dialog.entity, 'username', None):
-            link = f"https://t.me/{dialog.entity.username}"
-            links.append(link)
-    print(f"[INFO] Found {len(links)} groups.")
+            links.append(f"https://t.me/{dialog.entity.username}")
+    print(f"Fetched {len(links)} groups.")
     return links
 
+# --- CORE SEND LOGIC ---
 
-async def send_round(client, group_links, formats, last_format):
-    skip_numbers = [
-        "92441_45979",
-        "78148_37019",
-        "𝗗𝗠_𝗧𝗢_𝗞𝗡𝗢𝗪_𝗠𝗢𝗥𝗘",
-        "8271737924",
-        "82_717379_24",
-        "9133817162",
-        "9885074380",
-        "7093493173",
-        "919133817162",
-        "919885074380",
-        "917093493173",
-        "9133_81_7162",
-        "98850_74380",
-        "7093_49_3173",
-    ]
+async def send_round(client, group_links):
+    skip_numbers = ["92441_45979", "78148_37019", "8271737924", "9133817162", "9885074380", "7093493173"] 
+    all_failed = True 
 
-    all_failed = True
     for idx, group in enumerate(group_links, 1):
         if group == 'https://t.me/SavedMessages' or group.lower() == 'me':
             continue
 
-        last_format = (last_format + 1) % len(formats)
-        message_to_send = formats[last_format]
+        # PICK A RANDOM FORMAT FROM THE GLOBAL ARRAY
+        message_to_send = random.choice(Formats)
 
-        last_msg = None
         try:
+            last_msg = None
             async for msg in client.iter_messages(group, limit=1):
                 last_msg = msg.text.strip() if msg.text else None
                 break
-        except Exception as e:
-            print(f"{idx}. {group}: ERROR fetching last message: {e}")
-            continue
+            
+            if last_msg:
+                has_keyword = any(k in last_msg.lower() for k in KEYWORDS)
+                # Check for skips or duplicate messages
+                if any(num in last_msg for num in skip_numbers) or last_msg == message_to_send or (len(last_msg) <= 250 and not has_keyword):
+                    print(f"{idx}._S_K_I_P_P_E_D_ {group}")
+                    continue
 
-        if last_msg:
-            has_keyword = any(keyword in last_msg.lower() for keyword in KEYWORDS)
-            msg_length = len(last_msg)
-        else:
-            has_keyword = False
-            msg_length = 0
-
-        if last_msg and any(num in last_msg for num in skip_numbers):
-            print(f"{idx}. SKIPPED  {group}")
-            continue
-        if last_msg and last_msg == message_to_send:
-            print(f"{idx}. SKIPPED  {group}")
-            continue
-        if msg_length <= 250 and not has_keyword:
-            print(f"{idx}. SKIPPED  {group}")
-            continue
-
-        try:
             await client.send_message(group, message_to_send)
-            status = "_/"
             all_failed = False
-            print(f"{idx}. {status}       {group}")
-            import random
-            gap = random.randint(1, 5)
-            await asyncio.sleep(gap)
+            print(f"{idx}.____________ _/ {group}")
+            await asyncio.sleep(random.randint(1, 5))
+            
         except errors.FloodWaitError as e:
-            status = "X"
-            print(f"{idx}. {status}       {group}")
+            print(f"{idx}._____________X_ (Flood) {group}. Waiting {e.seconds}s")
             await asyncio.sleep(e.seconds)
         except Exception:
-            status = "X"
-            print(f"{idx}. {status}       {group}")
+            print(f"{idx}._____________X_ {group}")
 
-    return last_format, all_failed
+    return all_failed
 
-
-async def run_bot_round(bot_dir, last_format):
+async def run_bot_round(bot_dir):
     phone, api_id, api_hash = load_bot_env(bot_dir)
-    session_name = get_session_name(bot_dir)
+    is_na = False
+    session_path = str(bot_dir / 'session')
+    client = TelegramClient(session_path, api_id, api_hash)
 
-    print(f"[INFO] Starting round for {bot_dir.name} using {session_name}")
-    client = TelegramClient(session_name, api_id, api_hash)
     try:
         await client.start(phone=phone)
-    except errors.PhoneNumberBannedError:
-        print(f"[SKIP] Account: {phone} is Banned. Skipping this bot.")
-        return last_format
-    except errors.PhoneNumberFloodError:
-        print(f"[SKIP] Account: {phone} is Restricted (Flood). Skipping this bot.")
-        return last_format
-    except errors.PhoneNumberInvalidError:
-        print(f"[SKIP] Account: {phone} is Invalid. Skipping this bot.")
-        return last_format
-    except errors.UserDeactivatedBanError:
-        print(f"[SKIP] Account: {phone} is Deactivated/Banned. Skipping this bot.")
-        return last_format
+    except (errors.PhoneNumberBannedError, errors.UserDeactivatedBanError):
+        print(f"[CRITICAL] {phone} is Banned. Marking as NA.")
+        return True 
     except Exception as e:
-        if 'banned' in str(e).lower() or 'restricted' in str(e).lower():
-            print(f"[SKIP] Account: {phone} is Banned/Restricted. Skipping this bot.")
-            return last_format
-        else:
-            print(f"[SKIP] Account: {phone} error: {e}. Skipping this bot.")
-            return last_format
+        print(f"______S_K_I_P_P_E_D_ {phone} Error: {e}")
+        return False
 
     try:
-        group_links = await fetch_group_links(client)
-        seen = set()
-        unique_group_links = []
-        for link in group_links:
-            if link not in seen:
-                unique_group_links.append(link)
-                seen.add(link)
+        group_links = list(dict.fromkeys(await fetch_group_links(client)))
+        
+        if not group_links:
+            return False
 
-        if not unique_group_links:
-            print(f"[WARN] No groups found for {bot_dir.name}. Skipping this bot.")
-            return last_format
-
-        formats = await fetch_formats_from_saved_messages(client, num_formats=3)
-        if not formats:
-            print(f"[WARN] No formats found in Saved Messages for {bot_dir.name}. Skipping this bot.")
-            return last_format
-
-        last_format, all_failed = await send_round(client, unique_group_links, formats, last_format)
+        # Call send_round without needing formats passed in (it uses global Formats)
+        all_failed = await send_round(client, group_links)
+        
         if all_failed:
-            print(f"[SKIP] Account: {phone} is likely Banned/Restricted (all sends failed). Skipping this bot.")
-        return last_format
+            is_na = True
+            
+        return is_na
     finally:
         await client.disconnect()
 
-
-
-MIN_BREAK = 1800   # 30 minutes in seconds
-MAX_BREAK = 3600  # 60 minutes in seconds
-
+# --- MAIN LOOP ---
 
 async def main():
-    bot_dirs = get_bot_dirs(ROOT_DIR)
-    if not bot_dirs:
-        print("[ERROR] No bot directories found in proxySupport. Create bot1, bot2, etc.")
-        return
-
-
-    print(f"[INFO] Total bots found: {len(bot_dirs)}")
-    print(f"[INFO] Break timing between bots: random between {MIN_BREAK//60} and {MAX_BREAK//60} minutes\n")
-
-    import random
-    last_format = -1
     while True:
-        for bot_dir in bot_dirs:
-            # Skip bots with _NA suffix
-            parts = bot_dir.name.split('_', 1)
-            if len(parts) == 2 and parts[1].upper() == 'NA':
-                print(f"[SKIP] Bot {bot_dir.name} is marked as NA. Skipping this bot.")
-                continue
-            print(f"[INFO] Running bot: {bot_dir.name}")
-            last_format = await run_bot_round(bot_dir, last_format)
-            break_gap = random.randint(MIN_BREAK, MAX_BREAK)
-            print(f"[INFO] Completed round for {bot_dir.name}. Waiting {break_gap} seconds ({break_gap//60} min) before next bot.\n")
-            await asyncio.sleep(break_gap) # Wait before next bot
+        all_dirs = get_bot_dirs(ROOT_DIR)
+        active_bots = [d for d in all_dirs if "_NA" not in d.name.upper()]
+        
+        if not active_bots:
+            print("\n" + "!" * 50)
+            print("all Bots are failed to send | Script Ended")
+            print("!" * 50)
+            break
 
+        print(f"\n[INFO] Starting Round. Active Bots: {len(active_bots)}")
+
+        for bot_dir in active_bots:
+            print(f"\n[RUNNING] {bot_dir.name}")
+            is_na = await run_bot_round(bot_dir)
+
+            if is_na:
+                new_path = bot_dir.parent / f"{bot_dir.name}_NA"
+                try:
+                    bot_dir.rename(new_path)
+                    print(f"✅ Folder marked as dead: {new_path.name}")
+                except Exception as e:
+                    print(f"❌ Rename failed: {e}")
+                
+                print(f"[INFO] {bot_dir.name} is NA. Moving to next bot immediately...")
+                continue 
+
+            gap = random.randint(MIN_BREAK, MAX_BREAK)
+            print(f"[INFO] Waiting {gap}s before next bot...")
+            await asyncio.sleep(gap)
+
+        print(f"\n[ROUND COMPLETE] All active bots finished. Sleeping {ROUND_DELAY//60} mins...")
+        await asyncio.sleep(ROUND_DELAY)
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("\n__[_S_T_O_P_P_E_D_]__ Script terminated by user.")

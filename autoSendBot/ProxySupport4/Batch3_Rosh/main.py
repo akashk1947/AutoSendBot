@@ -29,10 +29,81 @@ KEYWORDS = [
     "8106368645",
 ]
 
+# The array the script will now pull from randomly
+Formats = [
+    """━━━━━━━━━━━━━━━━━━━━━━━
+⚡️ INTERVIEW SUPPORT ⚡️ 
+━━━━━━━━━━━━━━━━━━━━━━━
+
+Struggling with interviews? Online tests? Aptitude rounds?
+We’ve got your back 💯
+
+🔥 OUR SERVICES:
+✔ Aptitude Round Support
+✔ Technical Interview Support
+✔ Online Test / Exam Support
+✔ Real-Time Job Support
+
+🚀 TECHNOLOGIES COVERED:
+Java | Python | Node.js | React.js | Angular
+.NET | Salesforce | DevOps
+AWS | Azure | GCP
+Data Science | ML | AI
+Business Analyst (BA)
+Manual & Automation Testing (Selenium, Cypress)
+SAP | ServiceNow | SQL | Oracle
+Power BI | Tableau & Many More
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+💎 WHY CHOOSE US?
+👉 100% Invisible Screen Sharing
+👉 Undetectable in Task Manager
+👉 Instant On-Spot Answers
+👉 100% Safe & Secure Support
+👉 Trusted Globally 🌍 (🇺🇸 🇬🇧 🇮🇳 🇨🇦 🇦🇺)
+
+━━━━━━━━━━━━━━━━━━━━━━━
+
+No_DMs
+📲Only_WhatsAp: 91 92441_45979""",
+
+"""🎯 Struggling with Interviews? Let Experts Handle It!
+
+🚀 Crack Any Tech Interview with Expert Proxy Support!
+✅ Guaranteed satisfaction
+✅ Master Any Skill — Java to DevOps
+✅ Safe, Secure & Instant Assistance
+
+No_DMs
+📲Only_WhatsAp: 91 92441_45979
+
+
+🛠️ Technologies We Cover:
+💻 Java (Fullstack / Backend)
+💻 Python | React | Node.js
+💻 Salesforce | ServiceNow | Workday | SAP
+💻 DevOps (AWS / Azure / GCP)
+💻 QA (Manual / Automation)
+💻 Data Engineer | BI | .NET | More…
+
+
+🌟 Why Choose Us?
+💡 Confidential Yet Powerfull software
+⚡ real-time coaching and guidance
+🛡️ 100% Safe & Secure — protect your system & data
+🏆 Experts Across Every Tech Domain — Java to Salesforce
+🚀 Guaranteed Success — confidence & performance boost
+🌍 Global Support — USA 🇺🇸 | UK 🇬🇧 | India 🇮🇳 | Canada 🇨🇦 | Australia 🇦🇺
+
+No_DMs
+📲Only_WhatsAp: 91 92441_45979"""
+]
+
 ROOT_DIR = Path(__file__).parent
-MIN_BREAK = 10 * 60   # 5 minutes
-MAX_BREAK = 15 * 60  # 10 minutes
-ROUND_DELAY = 5 * 60 # 15 minutes between full rounds
+MIN_BREAK = 5 * 60   
+MAX_BREAK = 5 * 60  
+ROUND_DELAY = 1 * 60 
 
 # --- HELPER FUNCTIONS ---
 
@@ -65,14 +136,6 @@ def get_bot_dirs(root_dir):
 
     return sorted(bot_dirs, key=sort_key)
 
-async def fetch_formats_from_saved_messages(client, num_formats=3):
-    entity = await client.get_entity('me')
-    messages = []
-    async for msg in client.iter_messages(entity, limit=num_formats):
-        if msg.text and msg.text.strip():
-            messages.append(msg.text.strip())
-    return list(reversed(messages))
-
 async def fetch_group_links(client):
     links = []
     async for dialog in client.iter_dialogs():
@@ -83,16 +146,16 @@ async def fetch_group_links(client):
 
 # --- CORE SEND LOGIC ---
 
-async def send_round(client, group_links, formats, last_format):
-    skip_numbers = ["630_9729_431", "92441_45979", "78148_37019", "8271737924", "9133817162", "9885074380", "7093493173"] 
+async def send_round(client, group_links):
+    skip_numbers = ["92441_45979", "78148_37019", "8271737924", "9133817162", "9885074380", "7093493173"] 
     all_failed = True 
 
     for idx, group in enumerate(group_links, 1):
         if group == 'https://t.me/SavedMessages' or group.lower() == 'me':
             continue
 
-        last_format = (last_format + 1) % len(formats)
-        message_to_send = formats[last_format]
+        # PICK A RANDOM FORMAT FROM THE GLOBAL ARRAY
+        message_to_send = random.choice(Formats)
 
         try:
             last_msg = None
@@ -102,6 +165,7 @@ async def send_round(client, group_links, formats, last_format):
             
             if last_msg:
                 has_keyword = any(k in last_msg.lower() for k in KEYWORDS)
+                # Check for skips or duplicate messages
                 if any(num in last_msg for num in skip_numbers) or last_msg == message_to_send or (len(last_msg) <= 250 and not has_keyword):
                     print(f"{idx}._S_K_I_P_P_E_D_ {group}")
                     continue
@@ -117,9 +181,9 @@ async def send_round(client, group_links, formats, last_format):
         except Exception:
             print(f"{idx}._____________X_ {group}")
 
-    return last_format, all_failed
+    return all_failed
 
-async def run_bot_round(bot_dir, last_format):
+async def run_bot_round(bot_dir):
     phone, api_id, api_hash = load_bot_env(bot_dir)
     is_na = False
     session_path = str(bot_dir / 'session')
@@ -129,31 +193,30 @@ async def run_bot_round(bot_dir, last_format):
         await client.start(phone=phone)
     except (errors.PhoneNumberBannedError, errors.UserDeactivatedBanError):
         print(f"[CRITICAL] {phone} is Banned. Marking as NA.")
-        return last_format, True 
+        return True 
     except Exception as e:
         print(f"______S_K_I_P_P_E_D_ {phone} Error: {e}")
-        return last_format, False
+        return False
 
     try:
         group_links = list(dict.fromkeys(await fetch_group_links(client)))
-        formats = await fetch_formats_from_saved_messages(client)
         
-        if not group_links or not formats:
-            return last_format, False
+        if not group_links:
+            return False
 
-        last_format, all_failed = await send_round(client, group_links, formats, last_format)
+        # Call send_round without needing formats passed in (it uses global Formats)
+        all_failed = await send_round(client, group_links)
         
         if all_failed:
             is_na = True
             
-        return last_format, is_na
+        return is_na
     finally:
         await client.disconnect()
 
 # --- MAIN LOOP ---
 
 async def main():
-    last_format = -1
     while True:
         all_dirs = get_bot_dirs(ROOT_DIR)
         active_bots = [d for d in all_dirs if "_NA" not in d.name.upper()]
@@ -168,7 +231,7 @@ async def main():
 
         for bot_dir in active_bots:
             print(f"\n[RUNNING] {bot_dir.name}")
-            last_format, is_na = await run_bot_round(bot_dir, last_format)
+            is_na = await run_bot_round(bot_dir)
 
             if is_na:
                 new_path = bot_dir.parent / f"{bot_dir.name}_NA"
@@ -178,11 +241,9 @@ async def main():
                 except Exception as e:
                     print(f"❌ Rename failed: {e}")
                 
-                # --- MODIFIED: REMOVE TIMER IF RENAMED ---
                 print(f"[INFO] {bot_dir.name} is NA. Moving to next bot immediately...")
                 continue 
 
-            # Timer only runs for successful bots
             gap = random.randint(MIN_BREAK, MAX_BREAK)
             print(f"[INFO] Waiting {gap}s before next bot...")
             await asyncio.sleep(gap)
