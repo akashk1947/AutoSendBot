@@ -106,7 +106,7 @@ No_DMs
 ROOT_DIR = Path(__file__).parent
 MIN_BREAK = 5 * 60   
 MAX_BREAK = 5 * 60   
-ROUND_DELAY = 1 * 60 
+ROUND_DELAY = 5 * 60 
 
 # --- HELPER FUNCTIONS ---
 
