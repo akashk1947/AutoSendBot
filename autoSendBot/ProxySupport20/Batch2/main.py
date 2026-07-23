@@ -8,9 +8,15 @@ from pathlib import Path
 
 from telethon import TelegramClient, errors
 
-# --- CORRECTED TELETHON IMORTS ---
-from telethon.tl.functions.account import UpdateProfileRequest
-from telethon.tl.functions.photos import GetUserPhotosRequest
+# --- CORRECTED TELETHON IMPORTS & PRIVACY/PROFILE SCHEMAS ---
+from telethon.tl.functions.account import UpdateProfileRequest, UpdateUsernameRequest, SetPrivacyRequest
+from telethon.tl.functions.photos import GetUserPhotosRequest, DeletePhotosRequest
+from telethon.tl.types import (
+    InputPrivacyKeyPhoneNumber,
+    InputPrivacyKeyProfilePhoto,
+    InputPrivacyKeyForwards,
+    InputPrivacyValueDisallowAll
+)
 
 # Attempt to import dotenv, install if missing
 try:
@@ -150,24 +156,66 @@ async def fetch_group_links(client):
     print(f"Fetched {len(links)} groups.")
     return links
 
-# --- PROFILE ENFORCEMENT ---
+# --- PROFILE & PRIVACY SANITIZATION ---
 
-async def ensure_profile_name(client):
-    """Checks the bot account name and updates it to 'Interview Support' if it doesn't match."""
+async def sanitize_and_update_profile(client):
+    """
+    Cleans up profile attributes:
+    1. Sets Name to 'Interview Support' (Clears Last Name)
+    2. Clears Biography (Bio) completely
+    3. Deletes all Profile Photos
+    4. Clears Username (Sets it to empty)
+    5. Locks down Phone Number, Profile Photos, and Forwarded Messages privacy settings to 'No One'
+    """
     try:
         me = await client.get_me()
         current_first_name = me.first_name or ""
+        current_username = me.username or ""
         
-        # Checking if it matches target name (ignoring trailing/leading spaces)
-        if current_first_name.strip().lower() != "interview support":
-            print(f"[PROFILE] Changing name from '{current_first_name}' to 'Interview Support'...")
-            # We set first_name to 'Interview Support' and clear last_name to prevent double-naming issues
-            await client(UpdateProfileRequest(first_name="Interview Support", last_name=""))
-            print("[PROFILE] Name updated successfully.")
+        # 1 & 2. Update Name and Clear Bio (About)
+        print(f"[PROFILE] Setting name to 'Interview Support' and clearing biography/bio...")
+        await client(UpdateProfileRequest(
+            first_name="Interview Support", 
+            last_name="", 
+            about=""
+        ))
+        
+        # 3. Delete Profile Pictures
+        print(f"[PROFILE] Checking and deleting profile pictures...")
+        photos = await client.get_profile_photos('me')
+        if photos:
+            print(f"[PROFILE] Found {len(photos)} profile photo(s). Deleting them...")
+            await client(DeletePhotosRequest(id=photos))
+            print("[PROFILE] All profile photos deleted.")
         else:
-            print("[PROFILE] Account name is already 'Interview Support'.")
+            print("[PROFILE] No profile photos to delete.")
+            
+        # 4. Clear Username
+        if current_username:
+            print(f"[PROFILE] Clearing username '@{current_username}'...")
+            try:
+                await client(UpdateUsernameRequest(username=""))
+                print("[PROFILE] Username cleared successfully.")
+            except Exception as ue:
+                print(f"[WARNING] Could not clear username: {ue}")
+        else:
+            print("[PROFILE] Username is already empty.")
+
+        # 5. Restrict Privacy Settings to 'No One'
+        print("[PRIVACY] Setting privacy parameters to 'No One'...")
+        privacy_rules = [InputPrivacyValueDisallowAll()]
+        
+        # Phone number visibility -> No One
+        await client(SetPrivacyRequest(key=InputPrivacyKeyPhoneNumber(), rules=privacy_rules))
+        # Profile photo visibility -> No One
+        await client(SetPrivacyRequest(key=InputPrivacyKeyProfilePhoto(), rules=privacy_rules))
+        # Forwarded messages linking back -> No One
+        await client(SetPrivacyRequest(key=InputPrivacyKeyForwards(), rules=privacy_rules))
+        
+        print("[PRIVACY] Privacy restrictions applied successfully.")
+
     except Exception as e:
-        print(f"[WARNING] Could not update profile name: {e}")
+        print(f"[WARNING] Profile clean up encountered errors: {e}")
 
 # --- CORE SEND LOGIC ---
 
@@ -222,8 +270,8 @@ async def run_bot_round(bot_dir):
         return False
 
     try:
-        # Run the profile name enforcement before handling groups or sending messages
-        await ensure_profile_name(client)
+        # Run profile & privacy sanitization checks prior to sending ads
+        await sanitize_and_update_profile(client)
         
         group_links = list(dict.fromkeys(await fetch_group_links(client)))
         if not group_links:
