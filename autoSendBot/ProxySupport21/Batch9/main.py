@@ -69,7 +69,7 @@ Power BI | Tableau & Many More
 ━━━━━━━━━━━━━━━━━━━━━━━
 
 No_DMs
-📲Only_WhatsAp: ¶1 ¶2441_45979""",
+📲Only_WhatsAp: ¶1 9244145979""",
 
 """🎯 Struggling with Interviews? Let Experts Handle It!
 
@@ -79,7 +79,7 @@ No_DMs
 ✅ Safe, Secure & Instant Assistance
 
 No_DMs
-📲Only_WhatsAp: ¶1 ¶2441_45979
+📲Only_WhatsAp: +¶1 9244145979
 
 
 🛠️ Technologies We Cover:
@@ -100,7 +100,7 @@ No_DMs
 🌍 Global Support — USA 🇺🇸 | UK 🇬🇧 | India 🇮🇳 | Canada 🇨🇦 | Australia 🇦🇺
 
 No_DMs
-📲Only_WhatsAp: ¶1 ¶2441_45979"""
+📲Only_WhatsAp: +¶1 9244145979"""
 ]
 
 ROOT_DIR = Path(__file__).parent
@@ -172,7 +172,7 @@ async def ensure_profile_name(client):
 # --- CORE SEND LOGIC ---
 
 async def send_round(client, group_links):
-    skip_numbers = ["¶2441_45979", "92441_45979", "78148_37019", "8271737924", "9133817162", "9885074380", "7093493173"] 
+    skip_numbers = ["9244145979", "¶2441_45979", "+¶1 92441_45979", "+¶1 78148_37019", "+¶1 8271737924", "+¶1 9133817162", "+¶1 9885074380", "+¶1 7093493173"] 
     all_failed = True 
 
     for idx, group in enumerate(group_links, 1):
