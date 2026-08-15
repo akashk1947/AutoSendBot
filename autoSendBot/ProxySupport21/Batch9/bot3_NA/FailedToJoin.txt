@@ -1,3 +1,0 @@
-1. https://t.me/devopsjobgroup | Error: No user has "devopsjobgroup" as username
-2. https://t.me/awsdevopsgroup2022 | Error: No user has "awsdevopsgroup2022" as username
-3. https://t.me/AWS_GCP_Cloud | Error: No user has "aws_gcp_cloud" as username

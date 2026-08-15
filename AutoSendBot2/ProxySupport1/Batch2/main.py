@@ -71,12 +71,15 @@ Power BI | Tableau & Many More
 No_DMs
 📲Only_WhatsAp: ¶1 9244145979""",
 
-"""🎯 Struggling with Interviews? Let Experts Handle It!
+"""🎯 Struggling with Interviews, Exam, assessment or online Test? 
+Let Experts Handle It!
 
-🚀 Crack Any Tech Interview with Expert Proxy Support!
-✅ Guaranteed satisfaction
-✅ Master Any Skill — Java to DevOps
-✅ Safe, Secure & Instant Assistance
+🔥 OUR SERVICES:
+✔ Technical Interview Support
+✔ Test / Exam Support
+✔ Assessment / Assignment Support
+✔ Aptitude Round Support
+✔ Real-Time Support
 
 No_DMs
 📲Only_WhatsAp: +¶1 9244145979
