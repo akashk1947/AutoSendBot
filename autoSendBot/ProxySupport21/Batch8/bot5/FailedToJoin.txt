@@ -1,5 +1,0 @@
-1. https://t.me/SALESFORCESUPPORTA | Error: No user has "salesforcesupporta" as username
-2. https://t.me/SalesforceCertificationHelp | Error: No user has "salesforcecertificationhelp" as username
-3. https://t.me/salesforcesupports | Error: No user has "salesforcesupports" as username
-4. https://t.me/angular_ua_job | Error: No user has "angular_ua_job" as username
-5. https://t.me/reactethiopa | Error: No user has "reactethiopa" as username
